@@ -6,8 +6,6 @@ import NavigationMenu from "@/components/NavigationMenu";
 
 const client = generateClient<Schema>();
 
-export default withAuth(App);
-
 export default function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const { signOut } = useAuthenticator();
