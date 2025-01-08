@@ -1,57 +1,48 @@
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import { useAuthenticator } from "@aws-amplify/ui-react";
-import NavigationMenu from "@/components/NavigationMenu";
+import { withAuthenticator } from "@aws-amplify/ui-react";
+import { useState } from "react";
 
-const client = generateClient<Schema>();
+function Home() {
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [downloadMessage, setDownloadMessage] = useState("");
 
-export default function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-  const { signOut } = useAuthenticator();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }
+    try {
+      const response = await fetch("/api/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ instagramUrl }),
+      });
 
-  useEffect(() => {
-    listTodos();
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({
-      content: window.prompt("Todo content"),
-    });
-  }
-
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id });
-  }
+      const result = await response.json();
+      if (response.ok) {
+        setDownloadMessage(`Image downloaded successfully!`);
+      } else {
+        setDownloadMessage(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      setDownloadMessage("Error downloading image.");
+    }
+  };
 
   return (
-    <>
-      <NavigationMenu />
-      <main>
-        <h1>My todos</h1>
-        <button onClick={createTodo}>+ new</button>
-        <ul>
-          {todos.map((todo) => (
-            <li onClick={() => deleteTodo(todo.id)} key={todo.id}>
-              {todo.content}
-            </li>
-          ))}
-        </ul>
-        <div>
-          🥳 App successfully hosted. Try creating a new todo.
-          <br />
-          <a href="https://docs.amplify.aws/gen2/start/quickstart/nextjs-pages-router/">
-            Review next steps of this tutorial.
-          </a>
-        </div>
-        <button onClick={signOut}>Sign out</button>
-      </main>
-    </>
+    <div>
+      <h1>Instagram Image Downloader</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={instagramUrl}
+          onChange={(e) => setInstagramUrl(e.target.value)}
+          placeholder="Enter Instagram Post URL"
+        />
+        <button type="submit">Download Image</button>
+      </form>
+      <p>{downloadMessage}</p>
+    </div>
   );
 }
+
+export default withAuthenticator(Home);
