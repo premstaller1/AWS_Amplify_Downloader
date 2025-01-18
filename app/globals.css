@@ -1,6 +1,11 @@
 /* globals.css */
 
 /* Basic styling for the navigation bar */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
 nav {
     background-color: #333;
     padding: 1rem;

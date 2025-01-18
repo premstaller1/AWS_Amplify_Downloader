@@ -8,9 +8,13 @@ import "./app.css"
 
 Amplify.configure(outputs);
 
-export default function App() {
+export default function HomePage() {
   return (
-    <div>
+    <div className="homepage">
+      <div className="homepage-content">
+      <h1>Welcome to My Next.js App</h1>
+      <p>This is the homepage!</p>
+      </div>
     </div>
   );
 }
