@@ -26,7 +26,7 @@ export default function Page() {
       <Button size="lg" variant="default">
         Download Instagram Image
       </Button>
-      <p className="mt-4 text-lg">{status}</p>
+      <p className="mt-4 text-lg"></p>
     </div>
   );
 }
