@@ -20,7 +20,7 @@ export default function Page() {
     setError(null);
 
     try {
-      const response = await API.post("instagramimagedownloaderapi", "/InstaLoader", {
+      const response = await API.post("instagramimagedownloader", "/InstaLoader", {
         body: { url },
       });
 
